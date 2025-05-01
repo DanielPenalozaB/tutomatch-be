@@ -5,17 +5,17 @@ services:
     image: postgres:15-alpine
     container_name: tutomatch_postgres
     environment:
-      POSTGRES_USER: tutomatch_user
-      POSTGRES_PASSWORD: tutomatch_password
-      POSTGRES_DB: tutomatch_db
+      POSTGRES_USER: ${DB_USERNAME:-tutomatch_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-tutomatch_password}
+      POSTGRES_DB: ${DB_DATABASE:-tutomatch_db}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     networks:
       - tutomatch_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tutomatch_user -d tutomatch_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-tutomatch_user} -d ${DB_DATABASE:-tutomatch_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -28,20 +28,20 @@ services:
         condition: service_healthy
     environment:
       DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USERNAME: tutomatch_user
-      DB_PASSWORD: tutomatch_password
-      DB_DATABASE: tutomatch_db
-      APP_PORT: 4000
-      NODE_ENV: development # Add this for development
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USERNAME: ${DB_USERNAME:-tutomatch_user}
+      DB_PASSWORD: ${DB_PASSWORD:-tutomatch_password}
+      DB_DATABASE: ${DB_DATABASE:-tutomatch_db}
+      APP_PORT: ${APP_PORT:-4000}
+      NODE_ENV: ${NODE_ENV:-development}
     ports:
-      - "4000:4000"
+      - "${APP_PORT:-4000}:${APP_PORT:-4000}"
     networks:
       - tutomatch_network
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules # This preserves node_modules in container
-    command: npm run start:dev # Use this for development
+      - /usr/src/app/node_modules
+    command: npm run start:${NODE_ENV:-dev}
 
 volumes:
   postgres_data:
