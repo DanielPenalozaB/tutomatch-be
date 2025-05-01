@@ -1,98 +1,131 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# TutoMatch Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este repositorio contiene el backend para la aplicación TutoMatch, desarrollado con NestJS.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Descripción
 
-## Description
+TutoMatch es una aplicación diseñada para mejorar los procesos de tutorías en la Universidad Antonio José Camacho. Este repositorio contiene el código del servidor backend que gestiona la lógica de negocio, la conexión con la base de datos y expone una API REST para ser consumida por el frontend.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologías utilizadas
 
-## Project setup
+- **NestJS**: Framework de Node.js para construir aplicaciones de servidor eficientes y escalables
+- **TypeORM**: ORM (Object-Relational Mapping) para TypeScript y JavaScript
+- **PostgreSQL**: Sistema de gestión de bases de datos relacional
+- **Swagger**: Documentación de API interactiva
+- **Docker**: Contenedorización de la aplicación y sus dependencias
+- **Jest**: Framework de testing
 
-```bash
-$ npm install
+## Requisitos previos
+
+Para ejecutar este proyecto, necesitarás tener instalado:
+
+- [Node.js](https://nodejs.org/) (v20 o superior)
+- [npm](https://www.npmjs.com/)
+- [Docker](https://www.docker.com/) y [Docker Compose](https://docs.docker.com/compose/)
+
+## Instalación y configuración
+
+### Instalación local
+
+1. Clona este repositorio:
+   ```bash
+   git clone https://github.com/DanielPenalozaB/tutomatch-be
+   cd tutomatch-be
+   ```
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+3. Configura las variables de entorno (crea un archivo `.env` basado en el ejemplo proporcionado).
+
+4. Inicia la aplicación en modo desarrollo:
+   ```bash
+   npm run start:dev
+   ```
+
+### Usando Docker
+
+Para un entorno de desarrollo completo con Docker:
+
+1. Inicia los contenedores:
+   ```bash
+   npm run docker:dev
+   ```
+
+   O para reconstruir los contenedores:
+   ```bash
+   npm run docker:build
+   ```
+
+2. Para detener los contenedores:
+   ```bash
+   npm run docker:down
+   ```
+
+   O para detener y eliminar los volúmenes:
+   ```bash
+   npm run docker:down:volumes
+   ```
+
+## Scripts disponibles
+
+- `npm run build`: Compila la aplicación
+- `npm run format`: Formatea el código con Prettier
+- `npm run start`: Inicia la aplicación
+- `npm run start:dev`: Inicia la aplicación en modo desarrollo con recarga automática
+- `npm run start:debug`: Inicia la aplicación en modo debug
+- `npm run start:prod`: Inicia la aplicación en modo producción
+- `npm run lint`: Ejecuta ESLint para verificar y corregir problemas de estilo
+- `npm run test`: Ejecuta las pruebas unitarias
+- `npm run test:watch`: Ejecuta las pruebas en modo observador
+- `npm run test:cov`: Ejecuta las pruebas y genera informe de cobertura
+- `npm run test:debug`: Ejecuta las pruebas en modo debug
+- `npm run test:e2e`: Ejecuta pruebas end-to-end
+- `npm run docker:dev`: Inicia los contenedores Docker en modo desarrollo
+- `npm run docker:build`: Construye e inicia los contenedores Docker
+- `npm run docker:down`: Detiene los contenedores Docker
+- `npm run docker:down:volumes`: Detiene los contenedores Docker y elimina los volúmenes
+
+## Configuración de Docker
+
+El proyecto utiliza Docker para facilitar el desarrollo y despliegue. La configuración incluye:
+
+- **PostgreSQL**: Base de datos en contenedor con persistencia de datos mediante volúmenes
+- **Node.js**: Aplicación principal en contenedor con hot-reload para desarrollo
+
+### Variables de entorno para Docker
+
+Las siguientes variables de entorno se configuran en el archivo `docker-compose.yml`:
+
+- `DB_HOST`: Host de la base de datos (por defecto: postgres)
+- `DB_PORT`: Puerto de la base de datos (por defecto: 5432)
+- `DB_USERNAME`: Usuario de la base de datos (por defecto: tutomatch_user)
+- `DB_PASSWORD`: Contraseña de la base de datos (por defecto: tutomatch_password)
+- `DB_DATABASE`: Nombre de la base de datos (por defecto: tutomatch_db)
+- `APP_PORT`: Puerto donde se ejecuta la aplicación (por defecto: 4000)
+- `NODE_ENV`: Entorno de ejecución (por defecto: development)
+
+## Documentación de la API
+
+La documentación de la API está disponible mediante Swagger UI. Una vez que la aplicación esté en ejecución, puedes acceder a la documentación en:
+
+```
+http://localhost:4000/api/
 ```
 
-## Compile and run the project
+## Testing
+
+El proyecto utiliza Jest para pruebas unitarias y end-to-end. Para ejecutar las pruebas:
 
 ```bash
-# development
-$ npm run start
+# Pruebas unitarias
+npm run test
 
-# watch mode
-$ npm run start:dev
+# Pruebas end-to-end
+npm run test:e2e
 
-# production mode
-$ npm run start:prod
+# Cobertura de pruebas
+npm run test:cov
 ```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
