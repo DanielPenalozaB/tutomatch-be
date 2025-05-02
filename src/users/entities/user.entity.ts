@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Roles } from '../enums/roles.enum';
 
 @Entity('users')
 export class User {
@@ -33,15 +34,15 @@ export class User {
 
   @ApiProperty({
     description: 'User role (student, tutor, admin)',
-    example: 'student',
-    enum: ['student', 'tutor', 'admin'],
+    example: Roles.Student,
+    enum: Roles,
   })
   @Column({
     type: 'enum',
-    enum: ['student', 'tutor', 'admin'],
-    default: 'student',
+    enum: Roles,
+    default: Roles.Student,
   })
-  role: string;
+  role: Roles;
 
   @Exclude()
   @Column()
