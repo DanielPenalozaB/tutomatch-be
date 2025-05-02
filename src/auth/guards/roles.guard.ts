@@ -19,24 +19,24 @@ export class RolesGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
-    
+
     const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-    
+
     // If no roles are required, allow access
     if (!requiredRoles) {
       return true;
     }
-    
+
     const { user } = context.switchToHttp().getRequest();
-    
+
     // Make sure user exists (should be populated by JwtAuthGuard)
     if (!user) {
       return false;
     }
-    
+
     return requiredRoles.some((role) => user.role === role);
   }
 }

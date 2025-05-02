@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { validateUniajcEmail } from 'src/common/utils/email-validator';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +14,8 @@ export class UsersService {
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
+    validateUniajcEmail(createUserDto.email);
+
     const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);
   }
@@ -35,6 +38,11 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
+
+    if (updateUserDto.email && updateUserDto.email !== user.email) {
+      validateUniajcEmail(updateUserDto.email);
+    }
+
     Object.assign(user, updateUserDto);
     return this.usersRepository.save(user);
   }

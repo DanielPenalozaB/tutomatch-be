@@ -5,7 +5,7 @@ import { Roles } from '../../users/enums/roles.enum';
 export class RegisterDto {
   @ApiProperty({
     description: 'User email address',
-    example: 'user@example.com',
+    example: 'user@admon.uniajc.edu.co',
   })
   @IsEmail({}, { message: 'Please provide a valid email address' })
   @IsNotEmpty()

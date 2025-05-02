@@ -20,7 +20,7 @@ export class User {
 
   @ApiProperty({
     description: 'The email address of the user',
-    example: 'user@example.com',
+    example: 'user@admon.uniajc.edu.co',
   })
   @Column({ unique: true })
   email: string;
