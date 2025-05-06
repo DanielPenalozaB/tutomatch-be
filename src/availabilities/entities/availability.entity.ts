@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
 import { DayOfWeek } from '../enums/day-of-week.enum';
 
-
 @Entity('availabilities')
 export class Availability {
   @ApiProperty({
