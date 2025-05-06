@@ -1,12 +1,19 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { Availability } from 'src/availabilities/entities/availability.entity';
+import { Message } from 'src/messages/entities/message.entity';
+import { Notification } from 'src/notifications/entities/notification.entity';
+import { Report } from 'src/reports/entities/report.entity';
+import { TutoringSession } from 'src/tutoring-sessions/entities/tutoring-session.entity';
+import { TutorSubject } from 'src/tutors/entities/tutor-subject.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Roles } from '../enums/roles.enum';
 
 @Entity('users')
@@ -58,12 +65,42 @@ export class User {
 
   @ApiProperty({
     description: 'Brief bio of the user',
-    example:
-      'I am a math enthusiast looking for tutoring in advanced calculus.',
+    example: 'I am a math enthusiast looking for tutoring in advanced calculus.',
     required: false,
   })
   @Column({ type: 'text', nullable: true })
   bio: string;
+
+  @ApiProperty({
+    description: 'Student code or identification',
+    example: 'A12345',
+    required: false,
+  })
+  @Column({ nullable: true, unique: true })
+  studentCode: string;
+
+  @ApiProperty({
+    description: 'Academic program of the student',
+    example: 'Ingeniería de Sistemas',
+    required: false,
+  })
+  @Column({ nullable: true })
+  academicProgram: string;
+
+  @ApiProperty({
+    description: 'Semester of study',
+    example: 5,
+    required: false,
+  })
+  @Column({ nullable: true })
+  semester: number;
+
+  @ApiProperty({
+    description: 'Is the user account verified?',
+    example: false,
+  })
+  @Column({ default: false })
+  isVerified: boolean;
 
   @ApiProperty({
     description: 'Creation timestamp',
@@ -78,4 +115,25 @@ export class User {
   })
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => TutorSubject, tutorSubject => tutorSubject.tutor)
+  tutorSubjects: TutorSubject[];
+
+  @OneToMany(() => Availability, availability => availability.tutor)
+  availabilities: Availability[];
+
+  @OneToMany(() => TutoringSession, session => session.tutor)
+  tutoringSessionsAsTutor: TutoringSession[];
+
+  @OneToMany(() => TutoringSession, session => session.student)
+  tutoringSessionsAsStudent: TutoringSession[];
+
+  @OneToMany(() => Notification, notification => notification.recipient)
+  notifications: Notification[];
+
+  @OneToMany(() => Message, message => message.sender)
+  messages: Message[];
+
+  @OneToMany(() => Report, report => report.generatedBy)
+  generatedReports: Report[];
 }
