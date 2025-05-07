@@ -24,7 +24,7 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findById(id: number): Promise<User> {
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -37,18 +37,20 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
+    const user = await this.findById(id);
 
     if (updateUserDto.email && updateUserDto.email !== user.email) {
       validateUniajcEmail(updateUserDto.email);
     }
+
+    console.log(updateUserDto.academicProgram);
 
     Object.assign(user, updateUserDto);
     return this.usersRepository.save(user);
   }
 
   async remove(id: number): Promise<void> {
-    const user = await this.findOne(id);
+    const user = await this.findById(id);
     await this.usersRepository.remove(user);
   }
 }
