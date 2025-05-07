@@ -15,6 +15,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Roles } from '../enums/roles.enum';
+import { AcademicProgram } from '../enums/academic-program.enum';
 
 @Entity('users')
 export class User {
@@ -84,7 +85,11 @@ export class User {
     example: 'Ingeniería de Sistemas',
     required: false,
   })
-  @Column({ nullable: true })
+  @Column({
+    type: 'enum',
+    enum: AcademicProgram,
+    nullable: true
+  })
   academicProgram: string;
 
   @ApiProperty({
