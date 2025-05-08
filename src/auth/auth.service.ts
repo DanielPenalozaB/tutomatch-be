@@ -6,13 +6,17 @@ import { RegisterDto } from './dto/register.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { TokenPayload } from './entities/token.entity';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { Roles } from 'src/users/enums/roles.enum';
+import { ResendService } from 'src/resend/resend.service';
+import { clearConfigCache } from 'prettier';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private resendService: ResendService
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -136,5 +140,37 @@ export class AuthService {
     // Hash and save new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await this.usersService.update(userId, { password: hashedPassword });
+  }
+
+  async sendPasswordResetEmail(email: string): Promise<void> {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user) {
+      // Don't reveal if user doesn't exist for security
+      return;
+    }
+
+    // Create reset token (expires in 1 hour)
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 3600000); // 1 hour
+
+    await this.usersService.setPasswordResetToken(user.id, token, expiresAt);
+
+    // Send email
+    await this.resendService.sendPasswordResetEmail(user.name, user.email, token);
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    const user = await this.usersService.findByPasswordResetToken(token);
+
+    if (!user || !user.passwordResetToken || (user.passwordResetExpires && user.passwordResetExpires < new Date())) {
+      throw new BadRequestException('Token de recuperación inválido o expirado');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.usersService.updatePassword(user.id, hashedPassword);
+
+    // Invalidate token
+    await this.usersService.clearPasswordResetToken(user.id);
   }
 }

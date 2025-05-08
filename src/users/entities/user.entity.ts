@@ -107,6 +107,18 @@ export class User {
   @Column({ default: false })
   isVerified: boolean;
 
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
+  passwordResetToken?: string | null;
+
+  @Column({
+    type: 'timestamp with time zone',
+    nullable: true
+  })
+  passwordResetExpires?: Date | null;
+
   @ApiProperty({
     description: 'Creation timestamp',
     example: '2025-04-30T12:00:00Z',
