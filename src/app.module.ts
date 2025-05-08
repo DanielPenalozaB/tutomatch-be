@@ -13,10 +13,11 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { MessagesModule } from './messages/messages.module';
 import { ReportsModule } from './reports/reports.module';
 import { dataSourceOptions } from './configs/typeorm.config';
+import { ResendModule } from './resend/resend.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dataSourceOptions),
     UsersModule,
     AuthModule,
@@ -26,7 +27,8 @@ import { dataSourceOptions } from './configs/typeorm.config';
     TutoringSessionsModule,
     NotificationsModule,
     MessagesModule,
-    ReportsModule
+    ReportsModule,
+    ResendModule
   ],
   controllers: [AppController],
   providers: [AppService],
