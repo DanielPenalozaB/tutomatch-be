@@ -5,7 +5,7 @@ import { UpdateAvailabilityDto } from './dto/update-availability.dto';
 
 @Controller('availabilities')
 export class AvailabilitiesController {
-  constructor(private readonly availabilitiesService: AvailabilitiesService) {}
+  constructor(private readonly availabilitiesService: AvailabilitiesService) { }
 
   @Post()
   create(@Body() createAvailabilityDto: CreateAvailabilityDto) {
@@ -13,8 +13,8 @@ export class AvailabilitiesController {
   }
 
   @Get()
-  findAll() {
-    return this.availabilitiesService.findAll();
+  async findAll() {
+    return await this.availabilitiesService.findAll();
   }
 
   @Get(':id')
