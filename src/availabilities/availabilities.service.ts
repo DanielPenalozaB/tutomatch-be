@@ -27,7 +27,7 @@ export class AvailabilitiesService {
     throw new NotFoundException(`Tutor with ID ${tutorId} not found`);
   }
 
-  //VALIDACIÓN DE CONFLICTO DE HORARIOS
+  // ✅ VALIDACIÓN DE CONFLICTO DE HORARIOS
   const conflictingAvailabilities = await this.availabilityRepository
     .createQueryBuilder('availability')
     .where('availability.tutorId = :tutorId', { tutorId })
@@ -98,4 +98,6 @@ export class AvailabilitiesService {
       throw new NotFoundException(`No availability found with ID ${id}`);
     }
   }
+
+  
 }
