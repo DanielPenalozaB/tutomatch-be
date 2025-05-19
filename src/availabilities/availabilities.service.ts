@@ -98,4 +98,6 @@ export class AvailabilitiesService {
       throw new NotFoundException(`No availability found with ID ${id}`);
     }
   }
+
+  
 }
