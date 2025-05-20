@@ -10,6 +10,11 @@ import { User } from './entities/user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('tutors-with-availabilities')
+  async getTutorsWithAvailabilities() {
+    return await this.usersService.findAllTutorsWithAvailabilities();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'The user has been successfully created.', type: User })
