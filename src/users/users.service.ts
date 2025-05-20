@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUniajcEmail } from 'src/common/utils/email-validator';
+import { Roles } from './enums/roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,15 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
+
+  // NUEVO: Obtener usuarios con rol tutor y sus disponibilidades y materias 18/05/2025
+  async findAllTutorsWithAvailabilities(): Promise<User[]> {
+    return this.usersRepository.find({
+      where: { role: Roles.Tutor },
+      relations: ['availabilities', 'tutorSubjects'],
+      order: { id: 'ASC' }
+    });
+  }
 
   create(createUserDto: CreateUserDto): Promise<User> {
     validateUniajcEmail(createUserDto.email);
