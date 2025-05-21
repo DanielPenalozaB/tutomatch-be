@@ -10,12 +10,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Roles } from '../enums/roles.enum';
-import { AcademicProgram } from '../enums/academic-program.enum';
+import { TutoringOffer } from 'src/tutoring-offers/entities/tutoring-offers.entity';
+import { AcademicProgram } from 'src/academic-programs/entities/academic-program.entity';
 
 @Entity('users')
 export class User {
@@ -82,15 +85,11 @@ export class User {
 
   @ApiProperty({
     description: 'Academic program of the student',
-    example: 'Ingeniería de Sistemas',
+    type: () => AcademicProgram,
     required: false,
   })
-  @Column({
-    type: 'enum',
-    enum: AcademicProgram,
-    nullable: true
-  })
-  academicProgram: string;
+  @ManyToOne(() => AcademicProgram, program => program.students, { nullable: true })
+  academicProgram: AcademicProgram | null;
 
   @ApiProperty({
     description: 'Semester of study',
@@ -142,7 +141,7 @@ export class User {
   @OneToMany(() => TutoringSession, session => session.tutor)
   tutoringSessionsAsTutor: TutoringSession[];
 
-  @OneToMany(() => TutoringSession, session => session.student)
+  @ManyToMany(() => TutoringSession, session => session.student)
   tutoringSessionsAsStudent: TutoringSession[];
 
   @OneToMany(() => Notification, notification => notification.recipient)
@@ -153,4 +152,7 @@ export class User {
 
   @OneToMany(() => Report, report => report.generatedBy)
   generatedReports: Report[];
+
+  @OneToMany(() => TutoringOffer, offer => offer.tutor)
+  tutoringOffers: TutoringOffer[];
 }

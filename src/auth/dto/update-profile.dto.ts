@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsNumber, IsUrl, Min, Max, IsEnum } from 'class-validator';
-import { AcademicProgram } from 'src/users/enums/academic-program.enum';
+import { AcademicProgram } from 'src/academic-programs/entities/academic-program.entity';
 
 export class UpdateProfileDto {
   @ApiProperty({
@@ -40,14 +40,13 @@ export class UpdateProfileDto {
   studentCode?: string;
 
   @ApiProperty({
-    description: 'Academic program of the student',
-    example: 'Ingeniería de Sistemas',
+    description: 'Academic program ID of the student',
+    example: 1,
     required: false,
-    enum: AcademicProgram
   })
   @IsOptional()
-  @IsEnum(AcademicProgram)
-  academicProgram?: string;
+  @IsNumber()
+  academicProgramId?: number;
 
   @ApiProperty({
     description: 'Semester of study',

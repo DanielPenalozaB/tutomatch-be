@@ -14,6 +14,9 @@ import { MessagesModule } from './messages/messages.module';
 import { ReportsModule } from './reports/reports.module';
 import { dataSourceOptions } from './configs/typeorm.config';
 import { ResendModule } from './resend/resend.module';
+import { TutoringOffersModule } from './tutoring-offers/tutoring-offers.module';
+import { AcademicAreasModule } from './academic-areas/academic-areas.module';
+import { AcademicProgramsModule } from './academic-programs/academic-programs.module';
 
 @Module({
   imports: [
@@ -28,7 +31,10 @@ import { ResendModule } from './resend/resend.module';
     NotificationsModule,
     MessagesModule,
     ReportsModule,
-    ResendModule
+    ResendModule,
+    TutoringOffersModule,
+    AcademicAreasModule,
+    AcademicProgramsModule
   ],
   controllers: [AppController],
   providers: [AppService],

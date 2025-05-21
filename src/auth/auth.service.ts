@@ -10,11 +10,13 @@ import * as crypto from 'crypto';
 import { Roles } from 'src/users/enums/roles.enum';
 import { ResendService } from 'src/resend/resend.service';
 import { clearConfigCache } from 'prettier';
+import { AcademicProgramsService } from 'src/academic-programs/academic-programs.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private academicProgramsService: AcademicProgramsService,
     private jwtService: JwtService,
     private resendService: ResendService
   ) {}
@@ -90,17 +92,27 @@ export class AuthService {
 
   async updateProfile(userId: number, updateProfileDto: UpdateProfileDto) {
     const user = await this.usersService.findById(userId);
-
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    // Update user profile
-    const updatedUser = await this.usersService.update(userId, updateProfileDto);
+    // Handle academic program update if provided
+    if (updateProfileDto.academicProgramId !== undefined) {
+      if (!updateProfileDto.academicProgramId) {
+        user.academicProgram = null;
+      } else {
+        const academicProgram = await this.academicProgramsService.findOne(updateProfileDto.academicProgramId);
+        if (!academicProgram) {
+          throw new NotFoundException('Academic program not found');
+        }
+        user.academicProgram = academicProgram;
+      }
+    }
 
-    // Return updated user without password
-    const { password, ...result } = updatedUser;
-    return result;
+    // Update other fields
+    Object.assign(user, updateProfileDto);
+
+    return this.usersService.update(userId, user);
   }
 
   async hashPassword(password: string): Promise<string> {
