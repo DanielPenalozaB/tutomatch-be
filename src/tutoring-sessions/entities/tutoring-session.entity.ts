@@ -89,7 +89,7 @@ export class TutoringSession {
   meetingLink: string;
 
   @ApiProperty({
-    description: 'Physical location for in-person sessions',
+    description: 'Physical location for presential sessions',
     example: 'Biblioteca, Piso 2, Sala 3',
     required: false,
   })

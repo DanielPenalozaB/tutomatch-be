@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, Matches, MinLength, IsNumber } from 'class-validator';
 import { Roles } from '../enums/roles.enum';
 import { AcademicProgram } from '../enums/academic-program.enum';
 
@@ -62,12 +62,11 @@ export class CreateUserDto {
   bio?: string;
 
   @ApiProperty({
-    description: 'Academic program of the student',
-    example: 'Ingeniería de Sistemas',
+    description: 'Academic program ID of the student',
+    example: 1,
     required: false,
-    enum: AcademicProgram
   })
   @IsOptional()
-  @IsEnum(AcademicProgram)
-  academicProgram?: string;
+  @IsNumber()
+  academicProgramId?: number;
 }

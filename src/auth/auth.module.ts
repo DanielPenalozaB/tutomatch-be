@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { ResendModule } from 'src/resend/resend.module';
+import { AcademicProgramsModule } from 'src/academic-programs/academic-programs.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ResendModule } from 'src/resend/resend.module';
       inject: [ConfigService],
     }),
     ResendModule,
+    AcademicProgramsModule
   ],
   controllers: [AuthController],
   providers: [

@@ -5,19 +5,38 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUniajcEmail } from 'src/common/utils/email-validator';
+import { AcademicProgram } from 'src/academic-programs/entities/academic-program.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(AcademicProgram)
+    private academicProgramRepository: Repository<AcademicProgram>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    let academicProgram: AcademicProgram | undefined;
+
     validateUniajcEmail(createUserDto.email);
 
-    const user = this.usersRepository.create(createUserDto);
-    return this.usersRepository.save(user);
+    if (createUserDto.academicProgramId) {
+      academicProgram = await this.academicProgramRepository.findOne({
+        where: { id: createUserDto.academicProgramId },
+      }) ?? undefined;
+
+      if (!academicProgram) {
+        throw new NotFoundException('Academic program not found');
+      }
+    }
+
+    const user = this.usersRepository.create({
+      ...createUserDto,
+      academicProgram,
+    });
+
+    return await this.usersRepository.save(user);
   }
 
   findAll(): Promise<User[]> {
