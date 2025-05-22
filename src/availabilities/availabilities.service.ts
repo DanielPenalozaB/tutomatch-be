@@ -38,58 +38,58 @@ export class AvailabilitiesService {
     })
     .getMany();
 
-  if (conflictingAvailabilities.length > 0) {
-    throw new Error('Ya existe una disponibilidad que se cruza con este horario');
-  }
-
-  const availability = this.availabilityRepository.create({
-    tutor,
-    day,
-    startTime,
-    endTime,
-    ...rest,
-  });
-
-  return this.availabilityRepository.save(availability);
-}
-
-  async findAll(): Promise<Availability[]> {
-  return this.availabilityRepository.find({
-    relations: ['tutor'], // para que incluya la info del tutor
-  });
-}
-
-  async findOne(id: number): Promise<Availability> {
-  const availability = await this.availabilityRepository.findOne({
-    where: { id },
-    relations: ['tutor'], // incluir relación tutor
-  });
-
-  if (!availability) {
-    throw new NotFoundException(`Availability with ID ${id} not found`);
-  }
-
-  return availability;
-}
-
-  async update(id: number, updateAvailabilityDto: UpdateAvailabilityDto): Promise<Availability> {
-  const availability = await this.findOne(id); // validación incluida
-
-  if (updateAvailabilityDto.tutorId) {
-    const tutor = await this.userRepository.findOne({
-      where: { id: updateAvailabilityDto.tutorId },
-    });
-
-    if (!tutor) {
-      throw new NotFoundException(`Tutor with ID ${updateAvailabilityDto.tutorId} not found`);
+    if (conflictingAvailabilities.length > 0) {
+      throw new Error('Ya existe una disponibilidad que se cruza con este horario');
     }
 
-    availability.tutor = tutor;
+    const availability = this.availabilityRepository.create({
+      tutor,
+      day,
+      startTime,
+      endTime,
+      ...rest,
+    });
+
+    return this.availabilityRepository.save(availability);
   }
 
-  Object.assign(availability, updateAvailabilityDto);
-  return this.availabilityRepository.save(availability);
-}
+    async findAll(): Promise<Availability[]> {
+    return this.availabilityRepository.find({
+      relations: ['tutor'], // para que incluya la info del tutor
+    });
+  }
+
+    async findOne(id: number): Promise<Availability> {
+    const availability = await this.availabilityRepository.findOne({
+      where: { id },
+      relations: ['tutor'], // incluir relación tutor
+    });
+
+    if (!availability) {
+      throw new NotFoundException(`Availability with ID ${id} not found`);
+    }
+
+    return availability;
+  }
+
+  async update(id: number, updateAvailabilityDto: UpdateAvailabilityDto): Promise<Availability> {
+    const availability = await this.findOne(id); // validación incluida
+
+    if (updateAvailabilityDto.tutorId) {
+      const tutor = await this.userRepository.findOne({
+        where: { id: updateAvailabilityDto.tutorId },
+      });
+
+      if (!tutor) {
+        throw new NotFoundException(`Tutor with ID ${updateAvailabilityDto.tutorId} not found`);
+      }
+
+      availability.tutor = tutor;
+    }
+
+    Object.assign(availability, updateAvailabilityDto);
+    return this.availabilityRepository.save(availability);
+  }
 
   async remove(id: number): Promise<void> {
     const result = await this.availabilityRepository.delete(id);
