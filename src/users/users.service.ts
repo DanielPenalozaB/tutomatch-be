@@ -5,6 +5,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { validateUniajcEmail } from 'src/common/utils/email-validator';
+import { Roles } from './enums/roles.enum';
 import { AcademicProgram } from 'src/academic-programs/entities/academic-program.entity';
 
 @Injectable()
@@ -104,5 +105,13 @@ export class UsersService {
   async remove(id: number): Promise<void> {
     const user = await this.findById(id);
     await this.usersRepository.remove(user);
+  }
+
+  async findAllTutorsWithAvailabilities(): Promise<User[]> {
+    return this.usersRepository.find({
+      where: { role: Roles.Tutor },
+      relations: ['availabilities', 'tutorSubjects'],
+      order: { id: 'ASC' }
+    });
   }
 }
